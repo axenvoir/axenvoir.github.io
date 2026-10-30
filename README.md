@@ -12,8 +12,10 @@ This notice applies to the Expira Android application (`com.expira.app.tr`). It 
 
 ### Information stored on your device
 
-Expira stores the information you enter about products (such as product name, category, expiry date, quantity, and storage location), notes (title and content), and categories in the app's local database on your device. The app also stores limited preferences, including language, onboarding completion, theme settings, and optional Expira support points earned by completing a rewarded ad.
-These points are cosmetic in-app items with no cash or transfer value.
+Expira stores the information you enter about products (such as product name, category, expiry date, quantity, and storage location), notes (title and content), and categories in the app's local database on your device. The app also stores limited preferences, including language, onboarding completion, and theme settings. Current support-point balances and owned cosmetic color palettes are stored in the same local database. When upgrading from an older version, the app can import a pre-existing point balance once from a legacy local preference file.
+The app may also keep a simple local flag indicating that a reminder worker's last attempt ended in an error. This flag contains no product details or error text, is used to show a retry option in Settings, and is not included in the backup allowlist.
+If a completed ad reward cannot immediately be saved, the app may temporarily keep an opaque event ID in local preferences so it can retry the same point credit after restart. The ID is removed after the Room save succeeds and is not included in the backup allowlist.
+You may spend points on cosmetic color palettes. Five lifetime points also unlock a permanent Supporter badge. These points and items have no cash or transfer value.
 
 The current app does not create an Expira user account or operate an Expira server that synchronizes your product or note contents. Search text is used in the active screen and is not kept as a search-history record.
 
@@ -31,9 +33,9 @@ The current app does not offer a new in-app purchase flow. It uses Google Play B
 
 ### Notifications, backups, and exports
 
-If you enable reminders and grant notification permission, Expira schedules local notifications on your device using your saved product and expiry-date information. The app does not operate a remote push-notification server. Depending on your Android lock-screen settings, notification text may be visible on the device.
+If you enable reminders and grant notification permission, Expira schedules local notifications on your device using your saved product and expiry-date information. The app does not operate a remote push-notification server. A reminder can contain product names and expiry details in its private notification content. It is marked private and supplies generic public text for Android lock screens that hide private content; the actual preview depends on your device's notification and lock-screen settings.
 
-Android's backup and device-transfer features may include the app's product/category/note database and selected preferences (language, onboarding, and theme) when those system features are enabled and available. Android and your Google/device account control whether a backup or transfer occurs. Expira's backup allowlist does not include rewarded-ad points or ad-consent preferences.
+Android's backup and device-transfer features may include the app's main database, which contains product/category/note data, the local reward-point balance, and unlocked cosmetic palettes, as well as selected preferences (language, onboarding, and theme). The legacy point-balance preference is also allowlisted temporarily for one-time migration from older versions; pending reward-retry IDs, ad-consent preferences, and reminder-health flags are excluded. On Android 12 and later, Expira's cloud-backup rules opt out if the OS reports that client-side encryption is unavailable. The legacy full-backup rules on Android 11 and earlier do not provide the same encryption-capability check. Android and your Google/device account control whether a backup or transfer occurs, and no backup or transfer is guaranteed.
 
 If you export data as a CSV file, Android lets you choose where to save it. Expira does not upload that file to an Expira server. The selected storage, cloud-drive, or sharing provider may process the file under its own terms. Copies you export or back up may remain after you delete the original in Expira, so remove those copies separately if you no longer need them.
 
@@ -70,8 +72,10 @@ Bu bildirim, Expira Android uygulaması (`com.expira.app.tr`) için geçerlidir 
 
 ### Cihazınızda saklanan bilgiler
 
-Expira; ürünler için girdiğiniz ürün adı, kategori, son kullanma tarihi, miktar ve saklama yeri gibi bilgileri, notların başlık ve içeriğini ve kategorileri cihazınızdaki yerel uygulama veritabanında saklar. Uygulama ayrıca dil, ilk kurulumun tamamlanma durumu, tema ayarları ve isteğe bağlı ödüllü reklamları tamamlayarak kazanılan Expira destek puanları gibi sınırlı tercihleri cihazda tutar.
-Bu puanlar uygulama içi kozmetik öğelerdir; nakit veya devredilebilir bir değeri yoktur.
+Expira; ürünler için girdiğiniz ürün adı, kategori, son kullanma tarihi, miktar ve saklama yeri gibi bilgileri, notların başlık ve içeriğini ve kategorileri cihazınızdaki yerel uygulama veritabanında saklar. Uygulama ayrıca dil, ilk kurulumun tamamlanma durumu ve tema ayarları gibi sınırlı tercihleri tutar. Güncel destek puanı bakiyesi ve açılmış kozmetik renk paletleri aynı yerel veritabanındadır. Eski bir sürümden yükseltme sırasında uygulama, önceki yerel tercihler dosyasında bulunan puan bakiyesini bir kez içe aktarabilir.
+Uygulama ayrıca hatırlatıcı çalışanının son denemesinin hata ile bittiğini belirten basit bir yerel işaret tutabilir. Bu işaret ürün ayrıntılarını veya hata metnini içermez; yalnızca Ayarlar'da yeniden deneme seçeneği göstermek için kullanılır ve yedekleme izin listesine dahil değildir.
+Tamamlanan bir reklam ödülü hemen kaydedilemezse uygulama, yeniden başlatma sonrasında aynı puan işlemini tekrar deneyebilmek için yerel tercihlerde geçici, kimlik bilgisi içermeyen bir olay kodu tutabilir. Room kaydı başarılı olduğunda bu kod silinir ve yedekleme izin listesine dahil değildir.
+Puanları kozmetik renk paletlerinin kilidini açmak için harcayabilirsiniz. Ömür boyu kazanılan 5 puan ayrıca kalıcı bir Destekçi rozeti açar. Puanların ve öğelerin nakit veya devredilebilir değeri yoktur.
 
 Mevcut uygulama bir Expira kullanıcı hesabı oluşturmaz ve ürün veya not içeriklerinizi eşitleyen Expira sunucusu işletmez. Arama metni açık olan ekranda kullanılır; arama geçmişi olarak saklanmaz.
 
@@ -89,9 +93,9 @@ Mevcut uygulamada yeni uygulama içi satın alma akışı sunulmaz. Daha önce e
 
 ### Bildirimler, yedekleme ve dışa aktarma
 
-Hatırlatıcıları etkinleştirip bildirim izni verirseniz Expira, kayıtlı ürün ve son kullanma tarihi bilgilerinizi kullanarak cihazınızda yerel bildirimler planlar. Uygulama uzaktan bildirim gönderen bir sunucu işletmez. Android kilit ekranı ayarlarınıza bağlı olarak bildirim metni cihazda görünebilir.
+Hatırlatıcıları etkinleştirip bildirim izni verirseniz Expira, kayıtlı ürün ve son kullanma tarihi bilgilerinizi kullanarak cihazınızda yerel bildirimler planlar. Uygulama uzaktan bildirim gönderen bir sunucu işletmez. Bildirimin özel içeriğinde ürün adları ve son kullanma bilgileri bulunabilir. Bildirim özel olarak işaretlenir ve Android özel içeriği kilit ekranında gizlediğinde genel bir Expira metni sunar; gerçek önizleme cihazınızın bildirim ve kilit ekranı ayarlarına bağlıdır.
 
-Android yedekleme veya cihazlar arası aktarım özellikleri etkin ve destekleniyorsa uygulamanın ürün/kategori/not veritabanını ve seçili tercihlerini (dil, ilk kurulum durumu ve tema) yedeklemeye veya aktarmaya dahil edebilir. Bunun gerçekleşip gerçekleşmeyeceğini Android ve Google/cihaz hesabı ayarlarınız belirler. Uygulamanın yedekleme kuralları ödüllü reklam puanlarını ve reklam rıza tercihlerini yedeklemeye dahil etmez.
+Android yedekleme veya cihazlar arası aktarım özellikleri etkin ve destekleniyorsa ürün/kategori/not verileri, yerel ödül puanı bakiyesi ve açılmış kozmetik paletleri içeren ana veritabanını ve seçili tercihleri (dil, ilk kurulum durumu ve tema) yedeklemeye veya aktarmaya dahil edebilir. Eski puan bakiyesini tek seferlik içe aktarmak için önceki sürümün yerel puan tercih dosyası da geçici olarak izin listesindedir; bekleyen ödül tekrar-deneme kimlikleri, reklam rızası tercihleri ve hatırlatıcı sağlık işaretleri yedeklenmez. Android 12 ve üzeri bulut yedeklemesi, işletim sistemi istemci tarafı şifrelemenin kullanılamadığını bildirirse devre dışı bırakılır. Android 11 ve altındaki eski tam yedekleme kuralları aynı şifreleme-yeteneği kontrolünü sağlamaz. Yedekleme veya aktarım yapılıp yapılmayacağını Android ve Google/cihaz hesabı ayarlarınız belirler; yedekleme veya aktarım garanti edilmez.
 
 Verileri CSV olarak dışa aktarırsanız dosyanın kaydedileceği yeri Android üzerinden siz seçersiniz. Expira bu dosyayı kendi sunucusuna yüklemez. Seçtiğiniz depolama, bulut sürücüsü veya paylaşım sağlayıcısı dosyayı kendi koşullarına göre işleyebilir. Dışa aktardığınız veya yedeklenen kopyalar Expira’daki asıl veriyi sildikten sonra da kalabilir; artık istemiyorsanız bu kopyaları ayrıca silin.
 
